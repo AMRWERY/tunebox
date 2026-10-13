@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"c:/Users/amrmo/OneDrive/Desktop/Vueuse/Vueuse\"; sed -i \"s/isDark === 'dark'/isDark/g\" src/views/HomeView.vue; grep -n \"isDark\" src/views/HomeView.vue)"
+    ]
+  }
+}
