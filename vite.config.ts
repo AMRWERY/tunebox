@@ -39,13 +39,13 @@ export default defineConfig({
         {
           "@vueuse/core": [
             "useColorMode",
-            "useSound",
             "useDropZone",
             "useEventListener",
             "useMediaControls",
             "useStorage",
             "useNow",
-            "useDateFormat"
+            "useDateFormat",
+            "useIntervalFn"
           ],
         },
         // example type import

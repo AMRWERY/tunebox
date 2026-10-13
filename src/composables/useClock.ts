@@ -1,5 +1,5 @@
 export const useClock = () => {
-  const now = useNow({ interval: 1000 });
+  const now = useNow({ scheduler: (cb) => useIntervalFn(cb, 1000) });
 
   const greeting = computed(() => {
     const hour = now.value.getHours();

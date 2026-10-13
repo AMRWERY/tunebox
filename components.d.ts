@@ -11,9 +11,18 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AppIcon: typeof import('./src/components/AppIcon.vue')['default']
-    RollingText: typeof import('./src/components/RollingText.vue')['default']
+    AppHeader: typeof import('./src/components/app-header.vue')['default']
+    AppIcon: typeof import('./src/components/app-icon.vue')['default']
+    DropOverlay: typeof import('./src/components/drop-overlay.vue')['default']
+    MiniPlayer: typeof import('./src/components/mini-player.vue')['default']
+    PlayerCard: typeof import('./src/components/player-card.vue')['default']
+    PlayerControls: typeof import('./src/components/player-controls.vue')['default']
+    PlaylistCard: typeof import('./src/components/playlist-card.vue')['default']
+    PlaylistItem: typeof import('./src/components/playlist-item.vue')['default']
+    PlaylistToolbar: typeof import('./src/components/playlist-toolbar.vue')['default']
+    RollingText: typeof import('./src/components/rolling-text.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SkeletonRow: typeof import('./src/components/skeleton-row.vue')['default']
   }
 }

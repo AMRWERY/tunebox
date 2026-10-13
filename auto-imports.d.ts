@@ -86,6 +86,7 @@ declare global {
   const useEventListener: typeof import('@vueuse/core').useEventListener
   const useFullscreen: typeof import('@vueuse/core').useFullscreen
   const useId: typeof import('vue').useId
+  const useIntervalFn: typeof import('@vueuse/core').useIntervalFn
   const useLink: typeof import('vue-router').useLink
   const useLocalStorage: typeof import('@vueuse/core').useLocalStorage
   const useMediaControls: typeof import('@vueuse/core').useMediaControls
