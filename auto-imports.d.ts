@@ -118,4 +118,7 @@ declare global {
   // @ts-ignore
   export type { RouteLocationRaw } from 'vue-router'
   import('vue-router')
+  // @ts-ignore
+  export type { RepeatMode } from './src/composables/usePlayer'
+  import('./src/composables/usePlayer')
 }

@@ -85,3 +85,27 @@
     animation-delay: 0.4s;
   }
 }
+
+/* Page transitions */
+.drop-fade-enter-active,
+.drop-fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.drop-fade-enter-from,
+.drop-fade-leave-to {
+  opacity: 0;
+}
+
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+}
+
+.slide-up-enter-from,
+.slide-up-leave-to {
+  transform: translateY(1rem);
+  opacity: 0;
+}
