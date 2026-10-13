@@ -21,13 +21,20 @@
       <!-- Header -->
       <header class="flex items-center justify-between gap-4">
         <div class="min-w-0">
-          <p class="text-sm text-slate-500 dark:text-slate-400">
+          <p
+            class="flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400"
+          >
+            <AppIcon
+              :name="greetingIcon"
+              class="size-4"
+              :class="isEvening ? 'text-indigo-400' : 'text-amber-500'"
+            />
             {{ greeting }}
           </p>
           <p class="text-xs text-slate-500 dark:text-slate-400">
             {{ date }}
           </p>
-          <p class="text-lg font-semibold tabular-nums">{{ time }}</p>
+          <p class="text-lg font-semibold"><RollingText :value="time" /></p>
         </div>
 
         <div class="flex items-center gap-4">
@@ -390,7 +397,7 @@
 
 <script lang="ts" setup>
 const playerStore = usePlayerStore();
-const { greeting, time, date } = useClock();
+const { greeting, greetingIcon, isEvening, time, date } = useClock();
 
 const {
   mode,

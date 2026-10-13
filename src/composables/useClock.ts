@@ -8,8 +8,13 @@ export const useClock = () => {
     return "Good evening";
   });
 
+  const isEvening = computed(() => now.value.getHours() >= 18);
+  const greetingIcon = computed(() =>
+    isEvening.value ? "moon-icon" : "sun-icon",
+  );
+
   const time = useDateFormat(now, "hh:mm:ss A");
   const date = useDateFormat(now, "dddd, MMMM D, YYYY");
 
-  return { greeting, time, date };
+  return { greeting, greetingIcon, isEvening, time, date };
 };
