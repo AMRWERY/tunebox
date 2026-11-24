@@ -10,7 +10,7 @@
 <script lang="ts" setup>
 const props = defineProps<{ name: string }>();
 
-const iconVar = computed(() => `url(${getIconUrl(props.name)})`);
+const iconVar = computed(() => `url("${getIconUrl(props.name)}")`);
 </script>
 
 <style scoped>
