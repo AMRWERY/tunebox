@@ -45,6 +45,13 @@ export function usePlayer(
     src.value = objectUrl;
     await nextTick();
     playing.value = true;
+    // Changing `src` resets the element to paused, and `playing` may already
+    // be true (no change, so no play() from useMediaControls). Start it directly.
+    try {
+      await audioEl.value?.play();
+    } catch {
+      // Interrupted by a newer select() or blocked by autoplay policy.
+    }
   };
 
   const toggle = () => {
