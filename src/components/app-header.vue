@@ -18,17 +18,20 @@
     </div>
 
     <button
-      class="rounded-full bg-emerald-300 p-2.5 transition hover:bg-emerald-400"
+      class="overflow-hidden rounded-full bg-emerald-300 p-2.5 transition hover:bg-emerald-400 cursor-pointer"
       :aria-label="
         mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
       "
-      @click="toggleMode"
+      @click="toggleMode($event)"
     >
-      <img
-        :src="mode === 'dark' ? '/svg/sun-icon.svg' : '/svg/moon-icon.svg'"
-        alt=""
-        class="size-5"
-      />
+      <transition name="icon-spin" mode="out-in">
+        <img
+          :key="mode"
+          :src="mode === 'dark' ? '/svg/sun-icon.svg' : '/svg/moon-icon.svg'"
+          alt=""
+          class="size-5"
+        />
+      </transition>
     </button>
   </header>
 </template>

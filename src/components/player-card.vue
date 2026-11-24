@@ -48,14 +48,14 @@
     <label
       class="mt-5 flex items-center gap-3 text-slate-500 dark:text-slate-400"
     >
-      <app-icon name="volume-icon" class="size-5 shrink-0" />
+      <app-icon name="volume-icon" class="size-5 shrink-0 cursor-pointer" />
       <input
         v-model.number="volume"
         type="range"
         min="0"
         max="1"
         step="0.01"
-        class="w-full accent-emerald-500"
+        class="w-full accent-emerald-500 cursor-grab"
         aria-label="Volume"
       />
     </label>

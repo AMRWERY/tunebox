@@ -86,6 +86,50 @@
   }
 }
 
+/* Theme switch */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Fallback cross-fade for browsers without View Transitions */
+html.theme-fade,
+html.theme-fade *,
+html.theme-fade *::before,
+html.theme-fade *::after {
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease,
+    border-color 0.35s ease,
+    fill 0.35s ease,
+    stroke 0.35s ease !important;
+}
+
+.icon-spin-enter-active,
+.icon-spin-leave-active {
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.icon-spin-enter-from {
+  transform: rotate(-90deg) scale(0.5);
+  opacity: 0;
+}
+
+.icon-spin-leave-to {
+  transform: rotate(90deg) scale(0.5);
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon-spin-enter-active,
+  .icon-spin-leave-active {
+    transition: none;
+  }
+}
+
 /* Page transitions */
 .drop-fade-enter-active,
 .drop-fade-leave-active {

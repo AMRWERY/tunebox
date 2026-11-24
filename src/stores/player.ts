@@ -2,8 +2,54 @@ export const usePlayerStore = defineStore("player", () => {
   // Theme
   const mode = useColorMode();
 
-  const toggleMode = () => {
+  const applyMode = () => {
     mode.value = mode.value === "dark" ? "light" : "dark";
+  };
+
+  // Animated switch: circular reveal from the click point where the View
+  // Transitions API exists, a color cross-fade elsewhere, instant when the
+  // user prefers reduced motion.
+  const toggleMode = async (event?: MouseEvent) => {
+    const root = document.documentElement;
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (reduceMotion) {
+      applyMode();
+      return;
+    }
+
+    if (!document.startViewTransition) {
+      root.classList.add("theme-fade");
+      applyMode();
+      window.setTimeout(() => root.classList.remove("theme-fade"), 400);
+      return;
+    }
+
+    const x = event?.clientX ?? window.innerWidth / 2;
+    const y = event?.clientY ?? window.innerHeight / 2;
+    const radius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y),
+    );
+
+    const transition = document.startViewTransition(async () => {
+      applyMode();
+      await nextTick();
+    });
+
+    await transition.ready.catch(() => {});
+    root.animate(
+      {
+        clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`],
+      },
+      {
+        duration: 600,
+        easing: "ease-in-out",
+        pseudoElement: "::view-transition-new(root)",
+      },
+    );
   };
 
   // Playlist + playback

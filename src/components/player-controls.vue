@@ -1,7 +1,7 @@
 <template>
   <div class="mt-3 flex items-center justify-center gap-2 sm:gap-4">
     <button
-      class="flex items-center justify-center rounded-full p-2.5 transition"
+      class="flex items-center justify-center rounded-full p-2.5 transition cursor-pointer"
       :class="
         shuffle
           ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/50 dark:text-emerald-400'
@@ -16,7 +16,7 @@
     </button>
 
     <button
-      class="flex items-center justify-center rounded-full p-2 text-slate-600 transition hover:bg-slate-200 disabled:opacity-40 dark:text-slate-300 dark:hover:bg-gray-800"
+      class="flex items-center justify-center rounded-full p-2 text-slate-600 transition hover:bg-slate-200 disabled:opacity-40 dark:text-slate-300 dark:hover:bg-gray-800 cursor-pointer"
       :disabled="!tracks.length"
       aria-label="Previous"
       @click="prev"
@@ -25,7 +25,7 @@
     </button>
 
     <button
-      class="flex items-center justify-center rounded-full bg-emerald-500 p-4 text-white shadow-md transition hover:bg-emerald-600 disabled:opacity-40"
+      class="flex items-center justify-center cursor-pointer rounded-full bg-emerald-500 p-4 text-white shadow-md transition hover:bg-emerald-600 disabled:opacity-40"
       :disabled="!tracks.length"
       :aria-label="playing ? 'Pause' : 'Play'"
       @click="toggle"
@@ -37,7 +37,7 @@
     </button>
 
     <button
-      class="flex items-center justify-center rounded-full p-2 text-slate-600 transition hover:bg-slate-200 disabled:opacity-40 dark:text-slate-300 dark:hover:bg-gray-800"
+      class="flex items-center justify-center cursor-pointer rounded-full p-2 text-slate-600 transition hover:bg-slate-200 disabled:opacity-40 dark:text-slate-300 dark:hover:bg-gray-800"
       :disabled="!tracks.length"
       aria-label="Next"
       @click="next"
@@ -46,7 +46,7 @@
     </button>
 
     <button
-      class="flex items-center justify-center rounded-full p-2.5 transition"
+      class="flex items-center justify-center cursor-pointer rounded-full p-2.5 transition"
       :class="
         repeat !== 'off'
           ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/50 dark:text-emerald-400'
