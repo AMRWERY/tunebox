@@ -1,14 +1,16 @@
 <template>
-  <!-- Renders /public/svg/<name>.svg as a mask so it inherits the text colour. -->
+  <!-- Renders src/assets/svg/<name>.svg as a mask so it inherits the text colour. -->
   <span
     class="app-icon"
     aria-hidden="true"
-    :style="{ '--icon': `url(/svg/${name}.svg)` }"
+    :style="{ '--icon': iconVar }"
   ></span>
 </template>
 
 <script lang="ts" setup>
-defineProps<{ name: string }>();
+const props = defineProps<{ name: string }>();
+
+const iconVar = computed(() => `url(${getIconUrl(props.name)})`);
 </script>
 
 <style scoped>

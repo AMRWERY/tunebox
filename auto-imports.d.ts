@@ -24,6 +24,7 @@ declare global {
   const getCurrentInstance: typeof import('vue').getCurrentInstance
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
+  const getIconUrl: typeof import('./src/composables/useIcons').getIconUrl
   const h: typeof import('vue').h
   const inject: typeof import('vue').inject
   const isProxy: typeof import('vue').isProxy

@@ -28,7 +28,7 @@
       <transition name="icon-spin" mode="out-in">
         <img
           :key="mode"
-          :src="mode === 'dark' ? '/svg/sun-icon.svg' : '/svg/moon-icon.svg'"
+          :src="modeIcon"
           alt=""
           class="size-5"
         />
@@ -43,4 +43,8 @@ const { greeting, greetingIcon, isEvening, time, date } = useClock();
 const store = usePlayerStore();
 const { mode } = storeToRefs(store);
 const { toggleMode } = store;
+
+const modeIcon = computed(() =>
+  getIconUrl(mode.value === "dark" ? "sun-icon" : "moon-icon"),
+);
 </script>
