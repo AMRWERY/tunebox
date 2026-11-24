@@ -1,6 +1,6 @@
 <template>
   <section
-    class="self-start rounded-3xl bg-white/80 p-6 shadow-xl ring-1 ring-black/5 backdrop-blur dark:bg-gray-900/80 dark:ring-white/10 lg:sticky lg:top-6"
+    class="min-w-0 self-start rounded-3xl bg-white/80 p-6 shadow-xl ring-1 ring-black/5 backdrop-blur dark:bg-gray-900/80 dark:ring-white/10 lg:sticky lg:top-6"
   >
     <div
       class="mx-auto flex size-44 items-center justify-center rounded-full bg-linear-to-br from-emerald-400 to-teal-600 shadow-lg ring-8 ring-emerald-200/60 animate-spin [animation-duration:8s] dark:ring-emerald-900/60 md:size-56"

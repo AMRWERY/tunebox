@@ -1,6 +1,6 @@
 <template>
   <section
-    class="rounded-3xl bg-white/80 p-4 shadow-xl ring-1 ring-black/5 backdrop-blur dark:bg-gray-900/80 dark:ring-white/10 md:p-6"
+    class="min-w-0 rounded-3xl bg-white/80 p-4 shadow-xl ring-1 ring-black/5 backdrop-blur dark:bg-gray-900/80 dark:ring-white/10 md:p-6"
   >
     <div class="flex items-center justify-between pb-3">
       <h2 class="text-lg font-semibold">
@@ -27,21 +27,21 @@
     </div>
 
     <!-- Playlists -->
-    <div class="flex items-center gap-2 pb-3">
+    <div class="flex flex-wrap items-center gap-x-2 gap-y-1 pb-3">
       <input
         v-if="renamingId"
         ref="renameInput"
         v-model="draft"
         maxlength="40"
         aria-label="Playlist name"
-        class="min-w-0 flex-1 rounded-full bg-slate-100 px-3 py-1 text-sm outline-none ring-1 ring-emerald-400 dark:bg-gray-800"
+        class="min-w-0 basis-full rounded-full bg-slate-100 px-3 py-1 text-sm outline-none ring-1 ring-emerald-400 dark:bg-gray-800 sm:basis-0 sm:flex-1"
         @keyup.enter="commitRename"
         @keyup.esc="renamingId = ''"
         @blur="commitRename"
       />
       <div
         v-else
-        class="playlist-scroll flex min-w-0 flex-1 gap-1 overflow-x-auto pb-1"
+        class="playlist-scroll flex min-w-0 basis-full gap-1 overflow-x-auto pb-1 sm:basis-0 sm:flex-1"
       >
         <VButton
           v-for="p in playlists"

@@ -8,7 +8,9 @@
     <div class="mx-auto max-w-6xl space-y-6 px-4 py-6 pb-28 md:px-8 lg:pb-8">
       <app-header />
 
-      <div class="grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+      <div
+        class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]"
+      >
         <player-card />
 
         <playlist-card />

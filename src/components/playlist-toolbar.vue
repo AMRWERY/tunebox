@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex items-center justify-between border-y border-slate-200 py-2 text-sm dark:border-gray-800"
+    class="flex flex-wrap items-center justify-between gap-y-1 border-y border-slate-200 py-2 text-sm dark:border-gray-800"
   >
     <label class="flex cursor-pointer items-center gap-2 px-3">
       <input
@@ -12,7 +12,7 @@
       Select all
     </label>
 
-    <div class="flex items-center gap-3 px-1">
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1 px-1">
       <VButton
         v-if="selectedIds.length"
         variant="danger"
