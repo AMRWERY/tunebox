@@ -26,10 +26,6 @@
       </label>
     </div>
 
-    <p v-if="error || loadError" class="pb-2 text-sm text-red-500">
-      {{ error || loadError }}
-    </p>
-
     <playlist-toolbar v-if="tracks.length" />
 
     <div
@@ -60,8 +56,7 @@
 
 <script lang="ts" setup>
 const store = usePlayerStore();
-const { tracks, error, loadError, adding, isRemoving, removingIds } =
-  storeToRefs(store);
+const { tracks, adding, isRemoving, removingIds } = storeToRefs(store);
 const { addFiles } = store;
 
 const onPick = async (event: Event) => {

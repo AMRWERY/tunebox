@@ -17,8 +17,9 @@
       <p class="text-lg font-semibold"><rolling-text :value="time" /></p>
     </div>
 
-    <button
-      class="overflow-hidden rounded-full bg-emerald-300 p-2.5 transition hover:bg-emerald-400 cursor-pointer"
+    <VButton
+      variant="accent"
+      class="overflow-hidden"
       :aria-label="
         mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
       "
@@ -32,7 +33,7 @@
           class="size-5"
         />
       </transition>
-    </button>
+    </VButton>
   </header>
 </template>
 

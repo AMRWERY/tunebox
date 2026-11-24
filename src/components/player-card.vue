@@ -31,7 +31,7 @@
         :max="duration || 0"
         step="0.1"
         :disabled="!currentTrack"
-        class="w-full accent-emerald-500"
+        class="w-full accent-emerald-500 cursor-grab"
         aria-label="Seek"
       />
       <div

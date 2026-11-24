@@ -34,23 +34,28 @@
       <template v-else>{{ index + 1 }}</template>
     </span>
 
-    <button
-      class="flex-1 truncate text-left text-sm"
+    <VButton
+      variant="plain"
+      size="none"
+      :rounded="false"
+      class="min-w-0 flex-1 justify-start text-left text-sm"
       :class="{
         'font-semibold text-emerald-600 dark:text-emerald-400': isCurrent,
       }"
       @click="select(track.id)"
     >
-      {{ track.name }}
-    </button>
+      <span class="truncate">{{ track.name }}</span>
+    </VButton>
 
-    <button
-      class="rounded-full p-1 text-slate-400 opacity-0 transition hover:text-red-500 focus:opacity-100 group-hover:opacity-100"
+    <VButton
+      variant="danger-ghost"
+      size="xs"
+      class="opacity-0 focus:opacity-100 group-hover:opacity-100"
       :aria-label="`Remove ${track.name}`"
       @click="removeTrack(track.id)"
     >
       <app-icon name="close-icon" class="size-4" />
-    </button>
+    </VButton>
   </li>
 </template>
 

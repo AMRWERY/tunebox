@@ -1,12 +1,6 @@
 import type { Ref } from "vue";
 import type { Track } from "@/types";
-
-interface PlayerSource {
-  tracks: { value: Track[] };
-  getBlob: (id: string) => Promise<Blob | undefined>;
-}
-
-export type RepeatMode = "off" | "all" | "one";
+import type { PlayerSource, RepeatMode } from "@/types/composables/usePlayer";
 
 const REPEAT_ORDER: RepeatMode[] = ["off", "all", "one"];
 

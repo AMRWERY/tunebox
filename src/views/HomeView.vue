@@ -16,11 +16,21 @@
     </div>
 
     <mini-player />
+    <v-toast />
   </main>
 </template>
 
 <script lang="ts" setup>
-const { addFiles } = usePlayerStore();
+const store = usePlayerStore();
+const { addFiles } = store;
+const { error, loadError } = storeToRefs(store);
+
+// Playlist and playback errors surface as toasts.
+const toast = useToast();
+watch([error, loadError], ([playlistError, playbackError]) => {
+  if (playlistError) toast.error(playlistError);
+  if (playbackError) toast.error(playbackError);
+});
 
 // The whole page is a drop target.
 const page = useTemplateRef<HTMLElement>("page");

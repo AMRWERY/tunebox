@@ -104,6 +104,7 @@ declare global {
   const useStorage: typeof import('@vueuse/core').useStorage
   const useTemplateRef: typeof import('vue').useTemplateRef
   const useTimeAgo: typeof import('@vueuse/core').useTimeAgo
+  const useToast: typeof import('./src/composables/useToast').useToast
   const useToggle: typeof import('@vueuse/core').useToggle
   const useWindowScroll: typeof import('@vueuse/core').useWindowScroll
   const watch: typeof import('vue').watch
@@ -119,7 +120,4 @@ declare global {
   // @ts-ignore
   export type { RouteLocationRaw } from 'vue-router'
   import('vue-router')
-  // @ts-ignore
-  export type { RepeatMode } from './src/composables/usePlayer'
-  import('./src/composables/usePlayer')
 }

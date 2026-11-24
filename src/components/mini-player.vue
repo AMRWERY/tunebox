@@ -15,15 +15,11 @@
         {{ currentTrack.name }}
       </p>
 
-      <button
-        class="flex items-center justify-center rounded-full p-2 text-slate-600 dark:text-slate-300"
-        aria-label="Previous"
-        @click="prev"
-      >
+      <VButton size="sm" aria-label="Previous" @click="prev">
         <app-icon name="skip-prev-icon" class="size-6" />
-      </button>
-      <button
-        class="flex items-center justify-center rounded-full bg-emerald-500 p-2.5 text-white"
+      </VButton>
+      <VButton
+        variant="primary"
         :aria-label="playing ? 'Pause' : 'Play'"
         @click="toggle"
       >
@@ -31,14 +27,10 @@
           :name="playing ? 'player-pause-icon' : 'player-play-icon'"
           class="size-6"
         />
-      </button>
-      <button
-        class="flex items-center justify-center rounded-full p-2 text-slate-600 dark:text-slate-300"
-        aria-label="Next"
-        @click="next"
-      >
+      </VButton>
+      <VButton size="sm" aria-label="Next" @click="next">
         <app-icon name="skip-next-icon" class="size-6" />
-      </button>
+      </VButton>
     </div>
   </Transition>
 </template>

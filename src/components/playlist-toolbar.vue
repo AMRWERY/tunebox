@@ -13,21 +13,24 @@
     </label>
 
     <div class="flex items-center gap-3 px-1">
-      <button
+      <VButton
         v-if="selectedIds.length"
+        variant="danger"
+        size="pill"
         :disabled="isRemoving"
-        class="rounded-full bg-red-50 cursor-pointer px-3 py-1 font-medium text-red-600 transition hover:bg-red-100 disabled:opacity-50 dark:bg-red-950/50 dark:text-red-400 dark:hover:bg-red-950"
         @click="removeSelected"
       >
         Remove selected ({{ selectedIds.length }})
-      </button>
-      <button
+      </VButton>
+      <VButton
+        variant="toggle"
+        size="pill"
+        class="hover:text-red-500"
         :disabled="isRemoving"
-        class="rounded-full px-3 py-1 text-slate-500 transition hover:bg-slate-100 hover:text-red-500 disabled:opacity-50 dark:text-slate-400 dark:hover:bg-gray-800 cursor-pointer"
         @click="onClear"
       >
         Clear all
-      </button>
+      </VButton>
     </div>
   </div>
 </template>
