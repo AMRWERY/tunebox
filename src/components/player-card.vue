@@ -6,17 +6,33 @@
       class="mx-auto flex size-44 items-center justify-center rounded-full bg-linear-to-br from-emerald-400 to-teal-600 shadow-lg ring-8 ring-emerald-200/60 animate-spin [animation-duration:8s] dark:ring-emerald-900/60 md:size-56"
       :class="{ '[animation-play-state:paused]': !playing }"
     >
-      <app-icon name="music-icon" class="size-16 text-white/90 md:size-20" />
+      <img
+        v-if="coverUrl"
+        :src="coverUrl"
+        alt=""
+        class="size-full rounded-full object-cover"
+      />
+      <app-icon
+        v-else
+        name="music-icon"
+        class="size-16 text-white/90 md:size-20"
+      />
     </div>
 
     <div class="mt-6 text-center">
       <p class="truncate text-xl font-semibold">
         {{ currentTrack?.name ?? "Nothing playing" }}
       </p>
+      <p
+        v-if="currentTrack?.artist"
+        class="truncate text-sm text-slate-600 dark:text-slate-300"
+      >
+        {{ currentTrack.artist }}
+      </p>
       <p class="text-sm text-slate-500 dark:text-slate-400">
         {{
           currentTrack
-            ? `Track ${currentIndex + 1} of ${tracks.length}`
+            ? `Track ${currentIndex + 1} of ${queue.length}`
             : "Add songs to get started"
         }}
       </p>
@@ -44,6 +60,30 @@
 
     <player-controls />
 
+    <div class="mt-3 flex items-center justify-center gap-2">
+      <VButton
+        variant="toggle"
+        size="pill"
+        :active="speed !== 1"
+        title="Playback speed"
+        aria-label="Playback speed"
+        @click="cycleSpeed"
+      >
+        {{ speed }}x
+      </VButton>
+      <VButton
+        variant="toggle"
+        size="pill"
+        class="tabular-nums"
+        :active="sleepMinutes > 0"
+        title="Sleep timer"
+        aria-label="Sleep timer"
+        @click="cycleSleep"
+      >
+        {{ sleepMinutes ? `Sleep ${formatTime(sleepRemaining)}` : "Sleep: off" }}
+      </VButton>
+    </div>
+
     <!-- Volume -->
     <label
       class="mt-5 flex items-center gap-3 text-slate-500 dark:text-slate-400"
@@ -65,14 +105,19 @@
 <script lang="ts" setup>
 const store = usePlayerStore();
 const {
-  tracks,
+  queue,
   playing,
   currentTrack,
   currentIndex,
   currentTime,
   duration,
   volume,
+  speed,
+  sleepMinutes,
+  sleepRemaining,
+  coverUrl,
 } = storeToRefs(store);
+const { cycleSpeed, cycleSleep } = store;
 
 const formatTime = (seconds: number) => {
   if (!Number.isFinite(seconds)) return "0:00";

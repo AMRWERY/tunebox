@@ -53,11 +53,42 @@ export const usePlayerStore = defineStore("player", () => {
   };
 
   // Playlist + playback
-  const { tracks, error, adding, removingIds, addFiles, removeMany, getBlob } =
-    usePlaylist();
+  const {
+    playlists,
+    activeId,
+    activePlaylist,
+    tracks,
+    error,
+    adding,
+    removingIds,
+    addFiles,
+    removeMany,
+    getBlob,
+    getCover,
+    createPlaylist,
+    renamePlaylist,
+    deletePlaylist,
+    findPlaylistOf,
+  } = usePlaylist();
 
   // The store owns the audio element, so no component needs to render one.
   const audioEl = shallowRef(new Audio());
+
+  // Playback follows the playlist a song was started from, not the one being
+  // viewed, so browsing other playlists never interrupts the music.
+  const playingPlaylistId = ref(activeId.value);
+  const queue = computed(
+    () =>
+      (
+        playlists.value.find((p) => p.id === playingPlaylistId.value) ??
+        activePlaylist.value
+      ).tracks,
+  );
+
+  // With nothing loaded, "playing" simply tracks the viewed playlist.
+  watch(activeId, (id) => {
+    if (!currentId.value) playingPlaylistId.value = id;
+  });
 
   const {
     currentId,
@@ -70,14 +101,75 @@ export const usePlayerStore = defineStore("player", () => {
     volume,
     shuffle,
     repeat,
-    select,
-    toggle,
+    speed,
+    last,
+    select: selectTrack,
+    restore,
+    toggle: togglePlayback,
     next,
     prev,
     toggleShuffle,
     cycleRepeat,
     onRemoved,
-  } = usePlayer(audioEl, { tracks, getBlob });
+  } = usePlayer(audioEl, { tracks: queue, getBlob });
+
+  const select = (id: string) => {
+    const owner = findPlaylistOf(id);
+    if (owner) playingPlaylistId.value = owner.id;
+    return selectTrack(id);
+  };
+
+  // Play with nothing loaded starts the viewed playlist from its first song.
+  const toggle = () => {
+    if (currentTrack.value) return togglePlayback();
+    const first = tracks.value[0];
+    if (first) select(first.id);
+  };
+
+  // Resume the last song, paused at its saved position.
+  if (last.value.id) {
+    const owner = findPlaylistOf(last.value.id);
+    if (owner) {
+      playingPlaylistId.value = owner.id;
+      restore(last.value.id, last.value.time);
+    } else {
+      last.value = { id: "", time: 0 };
+    }
+  }
+
+  // Playback speed
+  const SPEEDS = [0.75, 1, 1.25, 1.5, 2];
+  const cycleSpeed = () => {
+    const i = SPEEDS.indexOf(speed.value);
+    speed.value = SPEEDS[(i + 1) % SPEEDS.length]!;
+  };
+
+  // Sleep timer
+  const {
+    minutes: sleepMinutes,
+    remaining: sleepRemaining,
+    cycle: cycleSleep,
+  } = useSleepTimer(() => {
+    playing.value = false;
+  });
+
+  // Cover art + lock-screen controls
+  const coverUrl = useCover(currentTrack, getCover);
+  useMediaSession({
+    track: currentTrack,
+    coverUrl,
+    playing,
+    currentTime,
+    duration,
+    play: () => {
+      playing.value = true;
+    },
+    pause: () => {
+      playing.value = false;
+    },
+    next,
+    prev,
+  });
 
   const isRemoving = computed(() => removingIds.value.length > 0);
 
@@ -106,6 +198,13 @@ export const usePlayerStore = defineStore("player", () => {
   };
 
   const removeTrack = (id: string) => removeTracks([id]);
+
+  // Playlists
+  const removePlaylist = async (id: string) => {
+    const doomed = playlists.value.find((p) => p.id === id);
+    doomed?.tracks.forEach((t) => onRemoved(t.id));
+    await deletePlaylist(id);
+  };
   const removeSelected = () => removeTracks([...selectedIds.value]);
   const clearAll = () => removeTracks(tracks.value.map((t) => t.id));
 
@@ -113,6 +212,9 @@ export const usePlayerStore = defineStore("player", () => {
     mode,
     toggleMode,
     tracks,
+    queue,
+    playlists,
+    activeId,
     error,
     adding,
     removingIds,
@@ -125,6 +227,10 @@ export const usePlayerStore = defineStore("player", () => {
     currentTime,
     duration,
     volume,
+    speed,
+    sleepMinutes,
+    sleepRemaining,
+    coverUrl,
     shuffle,
     repeat,
     selectedIds,
@@ -137,6 +243,11 @@ export const usePlayerStore = defineStore("player", () => {
     prev,
     toggleShuffle,
     cycleRepeat,
+    cycleSpeed,
+    cycleSleep,
+    createPlaylist,
+    renamePlaylist,
+    removePlaylist,
     removeTrack,
     removeSelected,
     clearAll,

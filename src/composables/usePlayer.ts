@@ -16,9 +16,32 @@ export function usePlayer(
   const history: string[] = []; // played ids, so "previous" works when shuffling
   let objectUrl = "";
 
-  const { playing, currentTime, duration, volume } = useMediaControls(audioEl, {
-    src,
-  });
+  const { playing, currentTime, duration, volume, rate } = useMediaControls(
+    audioEl,
+    { src },
+  );
+
+  // Playback speed. Loading a new src resets the element's rate to its
+  // default, so the default is kept in sync as well.
+  const speed = useStorage("player-speed", 1);
+  watch(
+    [speed, audioEl],
+    ([value, el]) => {
+      rate.value = value;
+      if (el) el.defaultPlaybackRate = value;
+    },
+    { immediate: true },
+  );
+
+  // Last song + position, so a reload resumes where the user left off.
+  const last = useStorage("player-last", { id: "", time: 0 });
+  watchThrottled(
+    currentTime,
+    (time) => {
+      if (currentId.value) last.value.time = time;
+    },
+    { throttle: 1000 },
+  );
 
   const currentIndex = computed(() =>
     tracks.value.findIndex((t) => t.id === currentId.value),
@@ -42,6 +65,7 @@ export function usePlayer(
     revoke();
     objectUrl = URL.createObjectURL(blob);
     currentId.value = id;
+    last.value = { id, time: 0 };
     src.value = objectUrl;
     await nextTick();
     playing.value = true;
@@ -52,6 +76,24 @@ export function usePlayer(
     } catch {
       // Interrupted by a newer select() or blocked by autoplay policy.
     }
+  };
+
+  // Loads a song paused at `time`, without starting playback.
+  const restore = async (id: string, time: number) => {
+    const blob = await getBlob(id);
+    if (!blob) return;
+    revoke();
+    objectUrl = URL.createObjectURL(blob);
+    currentId.value = id;
+    src.value = objectUrl;
+    await nextTick();
+    const el = audioEl.value;
+    if (!el) return;
+    const seek = () => {
+      el.currentTime = time;
+    };
+    if (el.readyState >= 1) seek();
+    else el.addEventListener("loadedmetadata", seek, { once: true });
   };
 
   const toggle = () => {
@@ -146,9 +188,12 @@ export function usePlayer(
     currentTime,
     duration,
     volume,
+    speed,
+    last,
     shuffle,
     repeat,
     select,
+    restore,
     toggle,
     next,
     prev,

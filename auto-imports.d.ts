@@ -9,6 +9,7 @@
 export {}
 declare global {
   const EffectScope: typeof import('vue').EffectScope
+  const SLEEP_OPTIONS_MIN: typeof import('./src/composables/useSleepTimer').SLEEP_OPTIONS_MIN
   const UseDark: typeof import('@vueuse/core').UseDark
   const UseMouse: typeof import('@vueuse/components').UseMouse
   const acceptHMRUpdate: typeof import('pinia').acceptHMRUpdate
@@ -58,6 +59,7 @@ declare global {
   const onWatcherCleanup: typeof import('vue').onWatcherCleanup
   const provide: typeof import('vue').provide
   const reactive: typeof import('vue').reactive
+  const readTrackMetadata: typeof import('./src/composables/useMetadata').readTrackMetadata
   const readonly: typeof import('vue').readonly
   const ref: typeof import('vue').ref
   const resolveComponent: typeof import('vue').resolveComponent
@@ -78,6 +80,7 @@ declare global {
   const useClock: typeof import('./src/composables/useClock').useClock
   const useColorMode: typeof import('@vueuse/core').useColorMode
   const useCountdown: typeof import('@vueuse/core').useCountdown
+  const useCover: typeof import('./src/composables/useCover').useCover
   const useCssModule: typeof import('vue').useCssModule
   const useCssVars: typeof import('vue').useCssVars
   const useDark: typeof import('@vueuse/core').useDark
@@ -91,6 +94,7 @@ declare global {
   const useLink: typeof import('vue-router').useLink
   const useLocalStorage: typeof import('@vueuse/core').useLocalStorage
   const useMediaControls: typeof import('@vueuse/core').useMediaControls
+  const useMediaSession: typeof import('./src/composables/useMediaSession').useMediaSession
   const useModel: typeof import('vue').useModel
   const useMouse: typeof import('@vueuse/core').useMouse
   const useNow: typeof import('@vueuse/core').useNow
@@ -100,6 +104,7 @@ declare global {
   const usePreferredDark: typeof import('@vueuse/core').usePreferredDark
   const useRoute: typeof import('vue-router').useRoute
   const useRouter: typeof import('vue-router').useRouter
+  const useSleepTimer: typeof import('./src/composables/useSleepTimer').useSleepTimer
   const useSlots: typeof import('vue').useSlots
   const useSound: typeof import('@vueuse/core').useSound
   const useStorage: typeof import('@vueuse/core').useStorage
@@ -112,6 +117,7 @@ declare global {
   const watchEffect: typeof import('vue').watchEffect
   const watchPostEffect: typeof import('vue').watchPostEffect
   const watchSyncEffect: typeof import('vue').watchSyncEffect
+  const watchThrottled: typeof import('@vueuse/core').watchThrottled
 }
 // for type re-export
 declare global {
@@ -121,4 +127,7 @@ declare global {
   // @ts-ignore
   export type { RouteLocationRaw } from 'vue-router'
   import('vue-router')
+  // @ts-ignore
+  export type { TrackMetadata } from './src/composables/useMetadata'
+  import('./src/composables/useMetadata')
 }

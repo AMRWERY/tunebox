@@ -26,6 +26,64 @@
       </label>
     </div>
 
+    <!-- Playlists -->
+    <div class="flex items-center gap-2 pb-3">
+      <input
+        v-if="renamingId"
+        ref="renameInput"
+        v-model="draft"
+        maxlength="40"
+        aria-label="Playlist name"
+        class="min-w-0 flex-1 rounded-full bg-slate-100 px-3 py-1 text-sm outline-none ring-1 ring-emerald-400 dark:bg-gray-800"
+        @keyup.enter="commitRename"
+        @keyup.esc="renamingId = ''"
+        @blur="commitRename"
+      />
+      <div
+        v-else
+        class="playlist-scroll flex min-w-0 flex-1 gap-1 overflow-x-auto pb-1"
+      >
+        <VButton
+          v-for="p in playlists"
+          :key="p.id"
+          variant="toggle"
+          size="pill"
+          class="shrink-0"
+          :active="p.id === activeId"
+          @click="activeId = p.id"
+          @dblclick="startRename(p.id, p.name)"
+        >
+          {{ p.name }}
+        </VButton>
+      </div>
+
+      <VButton
+        size="pill"
+        title="New playlist"
+        aria-label="New playlist"
+        @click="onCreate"
+      >
+        +
+      </VButton>
+      <VButton
+        size="pill"
+        title="Rename playlist"
+        @click="startRename(activeId, activeName)"
+      >
+        Rename
+      </VButton>
+      <VButton
+        variant="toggle"
+        size="pill"
+        class="hover:text-red-500"
+        title="Delete playlist"
+        :disabled="isRemoving"
+        @click="onDelete"
+      >
+        Delete
+      </VButton>
+    </div>
+
     <playlist-toolbar v-if="tracks.length" />
 
     <div
@@ -56,8 +114,47 @@
 
 <script lang="ts" setup>
 const store = usePlayerStore();
-const { tracks, adding, isRemoving, removingIds } = storeToRefs(store);
-const { addFiles } = store;
+const { tracks, playlists, activeId, adding, isRemoving, removingIds } =
+  storeToRefs(store);
+const { addFiles, createPlaylist, renamePlaylist, removePlaylist } = store;
+const toast = useToast();
+
+const activeName = computed(
+  () => playlists.value.find((p) => p.id === activeId.value)?.name ?? "",
+);
+
+// Inline rename: double-click a playlist, or use Rename / +.
+const renamingId = ref("");
+const draft = ref("");
+const renameInput = useTemplateRef<HTMLInputElement>("renameInput");
+
+const startRename = async (id: string, name: string) => {
+  renamingId.value = id;
+  draft.value = name;
+  await nextTick();
+  renameInput.value?.select();
+};
+
+const commitRename = () => {
+  if (!renamingId.value) return;
+  renamePlaylist(renamingId.value, draft.value);
+  renamingId.value = "";
+};
+
+const onCreate = () => {
+  const id = createPlaylist();
+  startRename(id, playlists.value.find((p) => p.id === id)?.name ?? "");
+};
+
+const onDelete = async () => {
+  const count = tracks.value.length;
+  const confirmed = await toast.confirm(
+    count
+      ? `Delete "${activeName.value}" and its ${count} songs?`
+      : `Delete "${activeName.value}"?`,
+  );
+  if (confirmed) removePlaylist(activeId.value);
+};
 
 const onPick = async (event: Event) => {
   const input = event.target as HTMLInputElement;

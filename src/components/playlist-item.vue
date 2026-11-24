@@ -45,6 +45,12 @@
       @click="select(track.id)"
     >
       <span class="truncate">{{ track.name }}</span>
+      <span
+        v-if="track.artist"
+        class="ml-2 hidden shrink-0 truncate text-xs font-normal text-slate-500 sm:inline dark:text-slate-400"
+      >
+        {{ track.artist }}
+      </span>
     </VButton>
 
     <VButton

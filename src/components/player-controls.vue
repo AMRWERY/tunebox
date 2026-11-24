@@ -58,6 +58,6 @@
 
 <script lang="ts" setup>
 const store = usePlayerStore();
-const { tracks, playing, shuffle, repeat } = storeToRefs(store);
+const { queue: tracks, playing, shuffle, repeat } = storeToRefs(store);
 const { toggle, next, prev, toggleShuffle, cycleRepeat } = store;
 </script>
