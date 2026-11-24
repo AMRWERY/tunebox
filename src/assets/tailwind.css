@@ -19,10 +19,15 @@
 .playlist-scroll::-webkit-scrollbar-thumb {
   background: var(--color-emerald-400);
   border-radius: 9999px;
+  cursor: grab;
 }
 
 .playlist-scroll::-webkit-scrollbar-thumb:hover {
   background: var(--color-emerald-500);
+}
+
+.playlist-scroll::-webkit-scrollbar-thumb:active {
+  cursor: grabbing;
 }
 
 .dark .playlist-scroll {

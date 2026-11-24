@@ -1,8 +1,6 @@
-import { del, get, set } from "idb-keyval";
+import { db, dbReady } from "@/lib/db";
 import type { Playlist, Track } from "@/types";
 
-const blobKey = (id: string) => `track-blob:${id}`;
-const coverKey = (id: string) => `track-cover:${id}`;
 // Keeps skeleton loaders visible long enough to be noticed on fast storage.
 const MIN_LOADING_MS = 350;
 
@@ -65,16 +63,17 @@ export const usePlaylist = () => {
       error.value = "Some files were skipped because they are not audio.";
     }
 
+    await dbReady;
     adding.value = audioFiles.length;
     for (const file of audioFiles) {
       const id = crypto.randomUUID();
       try {
         const [meta] = await Promise.all([
           readTrackMetadata(file),
-          set(blobKey(id), file),
+          db.blobs.put({ id, data: file }),
           sleep(MIN_LOADING_MS),
         ]);
-        if (meta.cover) await set(coverKey(id), meta.cover);
+        if (meta.cover) await db.covers.put({ id, data: meta.cover });
         target.tracks.push({
           id,
           name: meta.title ?? titleFromFile(file.name),
@@ -86,8 +85,8 @@ export const usePlaylist = () => {
         });
       } catch {
         await Promise.all([
-          del(blobKey(id)).catch(() => {}),
-          del(coverKey(id)).catch(() => {}),
+          db.blobs.delete(id).catch(() => {}),
+          db.covers.delete(id).catch(() => {}),
         ]);
         error.value = `Could not save "${file.name}". Browser storage may be full or blocked.`;
         break;
@@ -104,11 +103,10 @@ export const usePlaylist = () => {
     removingIds.value = [...removingIds.value, ...ids];
     const gone = new Set(ids);
     try {
+      await dbReady;
       await Promise.all([
-        ...ids.flatMap((id) => [
-          del(blobKey(id)).catch(() => {}),
-          del(coverKey(id)).catch(() => {}),
-        ]),
+        db.blobs.bulkDelete(ids).catch(() => {}),
+        db.covers.bulkDelete(ids).catch(() => {}),
         sleep(MIN_LOADING_MS),
       ]);
       for (const p of playlists.value) {
@@ -126,11 +124,13 @@ export const usePlaylist = () => {
   };
 
   const getBlob = async (id: string): Promise<Blob | undefined> => {
-    return get<Blob>(blobKey(id));
+    await dbReady;
+    return (await db.blobs.get(id))?.data;
   };
 
   const getCover = async (id: string): Promise<Blob | undefined> => {
-    return get<Blob>(coverKey(id));
+    await dbReady;
+    return (await db.covers.get(id))?.data;
   };
 
   // Playlists

@@ -6,7 +6,7 @@ export interface Track {
   album?: string;
   /** Seconds, when the file's tags report it. */
   duration?: number;
-  /** A cover image is stored in IndexedDB under this track's id. */
+  /** A cover image is stored in the Dexie `covers` table under this track's id. */
   hasCover?: boolean;
 }
 

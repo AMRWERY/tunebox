@@ -19,12 +19,14 @@ declare module 'vue' {
     PlayerControls: typeof import('./src/components/player-controls.vue')['default']
     PlaylistCard: typeof import('./src/components/playlist-card.vue')['default']
     PlaylistItem: typeof import('./src/components/playlist-item.vue')['default']
+    PlaylistNameDialog: typeof import('./src/components/playlist-name-dialog.vue')['default']
     PlaylistToolbar: typeof import('./src/components/playlist-toolbar.vue')['default']
     RollingText: typeof import('./src/components/rolling-text.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SkeletonRow: typeof import('./src/components/skeleton-row.vue')['default']
     VButton: typeof import('./src/components/shared/VButton.vue')['default']
+    VDialog: typeof import('./src/components/shared/VDialog.vue')['default']
     VToast: typeof import('./src/components/shared/VToast.vue')['default']
   }
 }

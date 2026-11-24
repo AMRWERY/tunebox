@@ -28,19 +28,7 @@
 
     <!-- Playlists -->
     <div class="flex flex-wrap items-center gap-x-2 gap-y-1 pb-3">
-      <input
-        v-if="renamingId"
-        ref="renameInput"
-        v-model="draft"
-        maxlength="40"
-        aria-label="Playlist name"
-        class="min-w-0 basis-full rounded-full bg-slate-100 px-3 py-1 text-sm outline-none ring-1 ring-emerald-400 dark:bg-gray-800 sm:basis-0 sm:flex-1"
-        @keyup.enter="commitRename"
-        @keyup.esc="renamingId = ''"
-        @blur="commitRename"
-      />
       <div
-        v-else
         class="playlist-scroll flex min-w-0 basis-full gap-1 overflow-x-auto pb-1 sm:basis-0 sm:flex-1"
       >
         <VButton
@@ -51,28 +39,30 @@
           class="shrink-0"
           :active="p.id === activeId"
           @click="activeId = p.id"
-          @dblclick="startRename(p.id, p.name)"
+          @dblclick="openRename(p.id, p.name)"
         >
           {{ p.name }}
         </VButton>
       </div>
 
       <VButton
+        v-if="firstHasSongs"
         size="pill"
         title="New playlist"
         aria-label="New playlist"
-        @click="onCreate"
+        @click="openCreate"
       >
         +
       </VButton>
       <VButton
         size="pill"
         title="Rename playlist"
-        @click="startRename(activeId, activeName)"
+        @click="openRename(activeId, activeName)"
       >
         Rename
       </VButton>
       <VButton
+        v-if="canDelete"
         variant="toggle"
         size="pill"
         class="hover:text-red-500"
@@ -83,6 +73,14 @@
         Delete
       </VButton>
     </div>
+
+    <playlist-name-dialog
+      v-model:open="dialogOpen"
+      :title="dialogMode === 'create' ? 'New playlist' : 'Rename playlist'"
+      :confirm-label="dialogMode === 'create' ? 'Create' : 'Rename'"
+      :initial-name="dialogName"
+      @submit="onDialogSubmit"
+    />
 
     <playlist-toolbar v-if="tracks.length" />
 
@@ -100,6 +98,7 @@
     >
       <template v-for="(track, i) in tracks" :key="track.id">
         <skeleton-row v-if="removingIds.includes(track.id)" />
+      
         <playlist-item v-else :track="track" :index="i" />
       </template>
 
@@ -123,27 +122,35 @@ const activeName = computed(
   () => playlists.value.find((p) => p.id === activeId.value)?.name ?? "",
 );
 
-// Inline rename: double-click a playlist, or use Rename / +.
+// The first playlist anchors the others: until it has songs there is nothing
+// to organise, so creating more playlists (or deleting it) is not offered.
+const firstHasSongs = computed(() => !!playlists.value[0]?.tracks.length);
+const canDelete = computed(
+  () => firstHasSongs.value || activeId.value !== playlists.value[0]?.id,
+);
+
+// Create and rename share one name dialog.
+const dialogOpen = ref(false);
+const dialogMode = ref<"create" | "rename">("create");
+const dialogName = ref("");
 const renamingId = ref("");
-const draft = ref("");
-const renameInput = useTemplateRef<HTMLInputElement>("renameInput");
 
-const startRename = async (id: string, name: string) => {
+const openCreate = () => {
+  dialogMode.value = "create";
+  dialogName.value = `Playlist ${playlists.value.length + 1}`;
+  dialogOpen.value = true;
+};
+
+const openRename = (id: string, name: string) => {
+  dialogMode.value = "rename";
   renamingId.value = id;
-  draft.value = name;
-  await nextTick();
-  renameInput.value?.select();
+  dialogName.value = name;
+  dialogOpen.value = true;
 };
 
-const commitRename = () => {
-  if (!renamingId.value) return;
-  renamePlaylist(renamingId.value, draft.value);
-  renamingId.value = "";
-};
-
-const onCreate = () => {
-  const id = createPlaylist();
-  startRename(id, playlists.value.find((p) => p.id === id)?.name ?? "");
+const onDialogSubmit = (name: string) => {
+  if (dialogMode.value === "create") createPlaylist(name);
+  else renamePlaylist(renamingId.value, name);
 };
 
 const onDelete = async () => {
