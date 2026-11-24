@@ -7,9 +7,17 @@ const toasts = ref<ToastItem[]>([]);
 let nextId = 0;
 
 export const useToast = () => {
-  const dismiss = (id: number) => {
+  // For confirmation toasts, closing without answering counts as "no".
+  const dismiss = (id: number, confirmed = false) => {
+    toasts.value.find((t) => t.id === id)?.resolve?.(confirmed);
     toasts.value = toasts.value.filter((t) => t.id !== id);
   };
+
+  // Persistent toast with Confirm / Cancel; replaces window.confirm().
+  const confirm = (message: string) =>
+    new Promise<boolean>((resolve) => {
+      toasts.value.push({ id: nextId++, message, type: "info", resolve });
+    });
 
   const show = (
     message: string,
@@ -26,6 +34,7 @@ export const useToast = () => {
     toasts,
     show,
     dismiss,
+    confirm,
     error: (message: string) => show(message, "error", 6000),
     success: (message: string) => show(message, "success"),
     info: (message: string) => show(message, "info"),

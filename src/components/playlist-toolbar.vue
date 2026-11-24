@@ -41,8 +41,12 @@ const { tracks, isRemoving, selectedIds, someSelected, allSelected } =
   storeToRefs(store);
 const { removeSelected, clearAll } = store;
 
-const onClear = () => {
-  if (confirm(`Remove all ${tracks.value.length} songs from the playlist?`))
-    clearAll();
+const toast = useToast();
+
+const onClear = async () => {
+  const confirmed = await toast.confirm(
+    `Remove all ${tracks.value.length} songs from the playlist?`,
+  );
+  if (confirmed) clearAll();
 };
 </script>

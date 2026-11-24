@@ -16,7 +16,7 @@
     </div>
 
     <mini-player />
-    <v-toast />
+    <VToast />
   </main>
 </template>
 
